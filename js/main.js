@@ -3,21 +3,31 @@ const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 const emptyList = document.querySelector("#emptyList");
 
+let tasks = [];
+
 form.addEventListener("submit", addTask);
 tasksList.addEventListener("click", deleteTask);
 tasksList.addEventListener("click", doneTask);
 
-const localStorageData = localStorage.getItem("tasksHTML");
-if (localStorageData) {
-  tasksList.innerHTML = localStorageData;
-}
+// const localStorageData = localStorage.getItem("tasksHTML");
+// if (localStorageData) {
+//   tasksList.innerHTML = localStorageData;
+// }
 
 function addTask(event) {
   event.preventDefault();
   const taskText = taskInput.value;
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    done: false,
+  };
+  tasks.push(newTask);
+
+  const classDone = newTask.done ? "task-title--done" : "";
   const taskHTML = `
-              <li class="list-group-item d-flex justify-content-between task-item">
-                  <span class="task-title">${taskText}</span>
+              <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
+                  <span class="task-title ${classDone}">${newTask.text}</span>
                   <div class="task-item__buttons">
                       <button type="button" data-action="done" class="btn-action">
                           <img src="./img/tick.svg" alt="Done" width="18" height="18">
@@ -38,7 +48,7 @@ function addTask(event) {
   if (tasksList.children.length > 1) {
     emptyList.classList.add("none");
   }
-  saveHTMLtoLS();
+  //   saveHTMLtoLS();
 }
 
 function deleteTask(event) {
@@ -46,11 +56,17 @@ function deleteTask(event) {
 
   if (event.target.dataset.action === "delete") {
     const parentNode = event.target.closest(".list-group-item");
+
+    // const index = tasks.findIndex((task) => task.id === Number(parentNode.id));
+    // tasks.splice(index, 1);
+
+    tasks = tasks.filter((task) => task.id !== Number(parentNode.id));
+
     parentNode.remove();
     if (tasksList.children.length === 1) {
       emptyList.classList.remove("none");
     }
-    saveHTMLtoLS();
+    // saveHTMLtoLS();
   }
 }
 
@@ -58,9 +74,11 @@ function doneTask(event) {
   if (event.target.dataset.action === "done") {
     const parentNode = event.target.closest(".list-group-item");
     const taskTitle = parentNode.querySelector(".task-title");
+    const task = tasks.find((task) => task.id === Number(parentNode.id));
+    task.done = !task.done;
     taskTitle.classList.toggle("task-title--done");
 
-    saveHTMLtoLS();
+    // saveHTMLtoLS();
   }
 }
 
