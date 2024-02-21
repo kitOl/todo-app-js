@@ -7,6 +7,11 @@ form.addEventListener("submit", addTask);
 tasksList.addEventListener("click", deleteTask);
 tasksList.addEventListener("click", doneTask);
 
+const localStorageData = localStorage.getItem("tasksHTML");
+if (localStorageData) {
+  tasksList.innerHTML = localStorageData;
+}
+
 function addTask(event) {
   event.preventDefault();
   const taskText = taskInput.value;
@@ -33,18 +38,19 @@ function addTask(event) {
   if (tasksList.children.length > 1) {
     emptyList.classList.add("none");
   }
+  saveHTMLtoLS();
 }
 
 function deleteTask(event) {
   event.preventDefault();
 
   if (event.target.dataset.action === "delete") {
-    console.log("delete");
     const parentNode = event.target.closest(".list-group-item");
     parentNode.remove();
     if (tasksList.children.length === 1) {
       emptyList.classList.remove("none");
     }
+    saveHTMLtoLS();
   }
 }
 
@@ -53,5 +59,11 @@ function doneTask(event) {
     const parentNode = event.target.closest(".list-group-item");
     const taskTitle = parentNode.querySelector(".task-title");
     taskTitle.classList.toggle("task-title--done");
+
+    saveHTMLtoLS();
   }
+}
+
+function saveHTMLtoLS() {
+  localStorage.setItem("tasksHTML", tasksList.innerHTML);
 }
