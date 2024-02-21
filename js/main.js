@@ -5,6 +5,8 @@ const emptyList = document.querySelector("#emptyList");
 
 form.addEventListener("submit", addTask);
 
+tasksList.addEventListener("click", deleteTask);
+
 function addTask(event) {
   event.preventDefault();
   const taskText = taskInput.value;
@@ -30,5 +32,18 @@ function addTask(event) {
 
   if (tasksList.children.length > 1) {
     emptyList.classList.add("none");
+  }
+}
+
+function deleteTask(event) {
+  event.preventDefault();
+
+  if (event.target.dataset.action === "delete") {
+    console.log("delete");
+    const parentNode = event.target.closest(".list-group-item");
+    parentNode.remove();
+    if (tasksList.children.length === 1) {
+      emptyList.classList.remove("none");
+    }
   }
 }
