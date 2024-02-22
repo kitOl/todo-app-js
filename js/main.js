@@ -8,25 +8,8 @@ let tasks = [];
 const localStorageData = localStorage.getItem("tasks");
 if (localStorageData) {
   tasks = JSON.parse(localStorageData);
+  tasks.forEach((task) => renderTask(task));
 }
-
-tasks.forEach(function (task) {
-  const classDone = task.done ? "task-title--done" : "";
-  const taskHTML = `
-                <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
-                    <span class="task-title ${classDone}">${task.text}</span>
-                    <div class="task-item__buttons">
-                        <button type="button" data-action="done" class="btn-action">
-                            <img src="./img/tick.svg" alt="Done" width="18" height="18">
-                        </button>
-                        <button type="button" data-action="delete" class="btn-action">
-                            <img src="./img/cross.svg" alt="Done" width="18" height="18">
-                        </button>
-                    </div>
-                </li>`;
-
-  tasksList.insertAdjacentHTML(`beforeend`, taskHTML);
-});
 
 checkEmptyList();
 
@@ -49,23 +32,7 @@ function addTask(event) {
   };
   tasks.push(newTask);
 
-  const classDone = newTask.done ? "task-title--done" : "";
-  const taskHTML = `
-              <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
-                  <span class="task-title ${classDone}">${newTask.text}</span>
-                  <div class="task-item__buttons">
-                      <button type="button" data-action="done" class="btn-action">
-                          <img src="./img/tick.svg" alt="Done" width="18" height="18">
-                      </button>
-                      <button type="button" data-action="delete" class="btn-action">
-                          <img src="./img/cross.svg" alt="Done" width="18" height="18">
-                      </button>
-                  </div>
-              </li>`;
-
-  //   console.log(taskList);
-
-  tasksList.insertAdjacentHTML(`beforeend`, taskHTML);
+  renderTask(newTask);
 
   taskInput.value = "";
   taskInput.focus();
@@ -134,4 +101,22 @@ function checkEmptyList() {
 
 function saveToLocalStorage() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderTask(task) {
+  const classDone = task.done ? "task-title--done" : "";
+  const taskHTML = `
+                <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
+                    <span class="task-title ${classDone}">${task.text}</span>
+                    <div class="task-item__buttons">
+                        <button type="button" data-action="done" class="btn-action">
+                            <img src="./img/tick.svg" alt="Done" width="18" height="18">
+                        </button>
+                        <button type="button" data-action="delete" class="btn-action">
+                            <img src="./img/cross.svg" alt="Done" width="18" height="18">
+                        </button>
+                    </div>
+                </li>`;
+
+  tasksList.insertAdjacentHTML(`beforeend`, taskHTML);
 }
